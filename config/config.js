@@ -1,4 +1,4 @@
-const API_KEY = 'pub_187190e5d115951a2adffb31154921becf687';
-const endpoint= 'https://newsdata.io/api/1/news?country=ke&apikey=pub_187190e5d115951a2adffb31154921becf687';
-const language= 'en';
-const country= 'Kenya';
+export const API_KEY = `4718482047364dc8a760ad5654cfca3`;
+export const endpoint= `https://newsapi.org/v2/top-headlines?country=in&apiKey=4718482047364dc8a760ad75654cfca3`;
+export const category= 'top';
+export const country= 'ke'

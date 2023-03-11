@@ -1,32 +1,43 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { FlatList, NativeBaseProvider, Box, Divider, ScrollView } from "native-base"
+import { services } from '../services/services'
+import { useEffect, useState } from "react";
 
-
-export default function Home() {
+export default function Gaming() {
+    const [newsData, setNewsData] = useState([])
+    useEffect(() => {
+        services('gaming')
+        .then(data => {
+            setNewsData(data)
+        })
+        .catch(error => {
+            alert(error)
+        })
+    }, [])
     return (
-        <View>
-            <View style={styles.container}>
-                <Text styles={styles.text}>This is everything</Text>
+        <NativeBaseProvider>
+            <View>
+                <View style={styles.container}>
+                    <Text styles={styles.text}>Latest In Gaming</Text>
+                </View>
+                <ScrollView
+                px={90}
+                _contentContainerStyle={{
+                    bg: "line.300",
+                    px: "44px",
+                    w: "100"
+                }}
+                ></ScrollView>
+                <FlatList data={newsData} 
+                renderItem={({ item}) => (
+                    <Box px={5} py={2} rounded="md" my={2} >
+                        {item.title}
+                    </Box>
+                )}
+            keyExtractor={(item) => item.id}/>
             </View>
-
-            <View style={styles.flex}>
-                <Text style={styles.title}>Title</Text>
-                <Text style={styles.date}>Date</Text>
-            </View>
-            <Divider my={2} bg='#bdbdbd'/>
-            <View style={styles.description}>
-                <Text style={styles.title}>Description</Text>
-            </View>
-            <Divider my={2} bg='#bdbdbd'/>
-            <View style={styles.flex}>
-                <Text style={styles.title}>Title</Text>
-                <Text style={styles.date}>Date</Text>
-            </View>
-
-            <View style={styles.description}>
-                <Text style={styles.title}>Description</Text>
-            </View>
-        </View>
+        </NativeBaseProvider>
     );
 }
 
@@ -42,7 +53,9 @@ const styles = StyleSheet.create({
     },
     flex: {
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 20
     },
     title: {
         fontSize: 20,

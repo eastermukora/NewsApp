@@ -1,33 +1,34 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Divider } from "react-native-elements";
-
+import { FlatList, NativeBaseProvider, Box, Divider, ScrollView } from "native-base";
+import { services } from '../services/services';
+import { useEffect, useState } from "react";
 
 export default function Home() {
+    const [newsData, setNewsData] = useState([])
+    useEffect(() => {
+        services('general')
+            .then(data => {
+                setNewsData(data)
+            })
+            .catch(error => {
+                alert(error)
+            })
+    }, [])
     return (
-        <View>
-            <View style={styles.container}>
-                <Text styles={styles.text}>This is everything</Text>
-            </View>
+        <NativeBaseProvider>
+            <ScrollView height={850}>
+                <FlatList
+                    data={newsData}
+                    renderItem={({ item }) => (
+                       <View>
 
-            <View style={styles.flex}>
-                <Text style={styles.title}>Title</Text>
-                <Text style={styles.date}>Date</Text>
-            </View>
-            <Divider my={2} bg='#bdbdbd'/>
-            <View style={styles.description}>
-                <Text style={styles.title}>Description</Text>
-            </View>
-            <Divider my={2} bg='#bdbdbd'/>
-            <View style={styles.flex}>
-                <Text style={styles.title}>Title</Text>
-                <Text style={styles.date}>Date</Text>
-            </View>
-
-            <View style={styles.description}>
-                <Text style={styles.title}>Description</Text>
-            </View>
-        </View>
+                       </View> 
+                    )}
+                    keyExtractor={(item) => item.id}
+                />
+            </ScrollView>
+        </NativeBaseProvider>
     );
 }
 
