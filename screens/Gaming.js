@@ -1,15 +1,20 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { FlatList, NativeBaseProvider, Box, Divider, ScrollView } from "native-base"
-import { services } from '../services/services'
+import { FlatList, NativeBaseProvider, Box, Divider, ScrollView, Spinner } from "native-base"
 import { useEffect, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import ArticleCard from "../components/ArticleCard";
+import * as rssParser from 'react-native-rss-parser'
 
 export default function Gaming() {
-    const [newsData, setNewsData] = useState([])
+    const [newsLetter, setNewsletter] = useState([])
     useEffect(() => {
-        services('gaming')
-        .then(data => {
-            setNewsData(data)
+        fetch ('https://gamespot.com/feeds/news')
+        .then((response) => response.text())
+        .then((responseData) => rssParser.parse(responseData))
+        .then((rss) => {
+    console.log(rss.title);
+    console.log(rss.items.length);
         })
         .catch(error => {
             alert(error)
@@ -17,32 +22,29 @@ export default function Gaming() {
     }, [])
     return (
         <NativeBaseProvider>
-            <View>
-                <View style={styles.container}>
-                    <Text styles={styles.text}>Latest In Gaming</Text>
-                </View>
-                <ScrollView
-                px={90}
-                _contentContainerStyle={{
-                    bg: "line.300",
-                    px: "44px",
-                    w: "100"
-                }}
-                ></ScrollView>
-                <FlatList data={newsData} 
-                renderItem={({ item}) => (
-                    <Box px={5} py={2} rounded="md" my={2} >
-                        {item.title}
-                    </Box>
-                )}
-            keyExtractor={(item) => item.id}/>
-            </View>
+                <ScrollView>
+                <SafeAreaView>
+                {newsLetter.length > 1 ?(
+                    <FlatList
+						style={[styles.cards]}
+						data={newsLetter}
+						renderItem={({ item, index}) => 
+                        <ArticleCard article={item} index={index} />}
+						keyExtractor={(_, index) => index}
+					/>
+                ) : (
+                    <View>
+                        <Spinner color="danger.600" />
+                    </View>
+                )};
+                </SafeAreaView>
+                </ScrollView>
         </NativeBaseProvider>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    newsContainer: {
         textAlign: 'center',
         padding: 10,
         backgroundColor: '#e0e0e0',
@@ -63,7 +65,13 @@ const styles = StyleSheet.create({
     date: {
         fontSize: 18,
     },
-    description: {
+    newsDescription: {
         padding: 20,
     },
+    spinner: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 400
+    }
 });

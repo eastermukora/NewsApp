@@ -1,5 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
+import { Divider } from "native-base"
+import Moment from 'moment'
 
 function ArticleCard({ article, index }) {
 	return (
@@ -15,7 +17,9 @@ function ArticleCard({ article, index }) {
 				/>
 			)}
 			<Text style={styles.cardTitle}>{article.title}</Text>
+			<Text style={styles.cardDate}>{Moment(article.publishedAt).format('LLL')}</Text>
 			<Text style={styles.cardDescription}>{article.description}</Text>
+			<Divider my={0} bg='#e0e0e0'/>
 		</View>
 	);
 }
@@ -36,10 +40,15 @@ const styles = StyleSheet.create({
 	cardDescription: {
         fontSize: 12,
 	},
-
+	cardDescription: {
+        fontSize: 12,
+	},
 	image: {
 		height: 200,
 		width: "100%",
+	},
+	cardDescription: {
+        fontSize: 12,
 	},
 });
 
