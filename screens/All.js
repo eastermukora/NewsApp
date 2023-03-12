@@ -5,14 +5,14 @@ import { services } from "../services/services";
 import { useEffect, useState } from "react";
 import { endpoint } from "../config/config";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ArticleCard from "../components/ArticleCard";
 
 export default function Home() {
 	const [newsData, setNewsData] = useState([]);
 	useEffect(() => {
-		fetch(endpoint)
-			.then((res) => res.json())
+		services()
 			.then((data) => {
-				setNewsData(data.articles);
+				setNewsData(data);
 			})
 			.catch((error) => {
 				alert(error);
@@ -23,13 +23,10 @@ export default function Home() {
 			<SafeAreaView>
 				<ScrollView>
 					<FlatList
+						style={[styles.cards]}
 						data={newsData}
-						renderItem={({ item }) => (
-							<View>
-								<Text>{item.title}</Text>
-							</View>
-						)}
-						keyExtractor={(item) => item.id}
+						renderItem={({ item, index }) => <ArticleCard article={item} index={index} />}
+						keyExtractor={(_, index) => index}
 					/>
 				</ScrollView>
 			</SafeAreaView>
@@ -61,5 +58,8 @@ const styles = StyleSheet.create({
 	},
 	description: {
 		padding: 20,
+	},
+	cards: {
+		display: "flex",
 	},
 });
