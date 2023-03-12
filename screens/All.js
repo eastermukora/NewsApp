@@ -10,7 +10,7 @@ import ArticleCard from "../components/ArticleCard";
 export default function Home() {
     const [newsData, setNewsData] = useState([])
     useEffect(() => {
-        services('sports')
+        services('general')
         .then(data => {
             setNewsData(data)
         })

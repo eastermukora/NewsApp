@@ -7,14 +7,11 @@ import ArticleCard from "../components/ArticleCard";
 import * as rssParser from 'react-native-rss-parser'
 
 export default function Gaming() {
-    const [newsLetter, setNewsletter] = useState([])
+    const [newsData, setNewsData] = useState([])
     useEffect(() => {
-        fetch ('https://gamespot.com/feeds/news')
-        .then((response) => response.text())
-        .then((responseData) => rssParser.parse(responseData))
-        .then((rss) => {
-    console.log(rss.title);
-    console.log(rss.items.length);
+        services('sports')
+        .then(data => {
+            setNewsData(data)
         })
         .catch(error => {
             alert(error)
